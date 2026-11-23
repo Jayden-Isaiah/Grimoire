@@ -9,6 +9,8 @@ import { useCampagne } from '../../contexts/campagneContext';
 import { useTheme } from '../../contexts/themeContext';
 import { usePersonnages } from '../../hooks/usePersonnages';
 import { calculerResume } from '../../utils/resume';
+import { useRouter } from 'expo-router';
+
 
 const RESUME_VIDE = { nombrePersonnages: 0, niveauMoyen: 0, personnagesKo: 0, repartitionClasses: [] };
 
@@ -28,11 +30,14 @@ export default function Resume() {
   const { campagneActive } = useCampagne();
   const { personnages, chargement, erreur, recharger } = usePersonnages(campagneActive?.id);
   const resume = calculerResume(personnages) ?? RESUME_VIDE;
+  const router = useRouter();
 
   const ouvrirPersonnage = (personnage) => {
+    router.push(`/personnage/${personnage.id}`);
   };
 
   const ouvrirAjout = () => {
+    router.push('/personnage/ajout');
   };
 
   if (chargement) {

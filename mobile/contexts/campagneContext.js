@@ -6,9 +6,11 @@ export const CampagneProvider = ({ children }) => {
   const [campagneActive, setCampagneActive] = useState(null);
 
   const choisirCampagne = (campagne) => {
+    setCampagneActive(campagne);
   };
 
   const quitterCampagne = () => {
+    setCampagneActive(null);
   };
 
   return (

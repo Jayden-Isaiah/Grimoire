@@ -7,6 +7,10 @@ export const ThemeProvider = ({ children }) => {
   const [nomTheme, setNomTheme] = useState('parchemin');
 
   const changerTheme = async (nouveauTheme) => {
+    if (!colorsPalette[nouveauTheme]) {
+      return;
+    }
+    setNomTheme(nouveauTheme);
   };
 
   return (

@@ -9,20 +9,24 @@ import EtatVide from '../../components/EtatVide';
 import { useCampagne } from '../../contexts/campagneContext';
 import { useTheme } from '../../contexts/themeContext';
 import { usePersonnages } from '../../hooks/usePersonnages';
+import { useRouter } from 'expo-router';
 
 export default function Personnages() {
   const { theme } = useTheme();
   const { campagneActive } = useCampagne();
   const { personnages, chargement, erreur, recharger } = usePersonnages(campagneActive?.id);
   const [recherche, setRecherche] = useState('');
+  const router = useRouter();
 
   const filtrer = (liste, texte) => {
   };
 
   const ouvrirPersonnage = (personnage) => {
+    router.push(`/personnage/${personnage.id}`);
   };
 
   const ouvrirAjout = () => {
+    router.push('/personnage/ajout');
   };
 
   if (chargement) {
