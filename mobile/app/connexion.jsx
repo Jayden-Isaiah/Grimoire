@@ -3,15 +3,30 @@ import { KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-na
 import Bouton from '../components/Bouton';
 import ChampTexte from '../components/ChampTexte';
 import { useTheme } from '../contexts/themeContext';
+import { useRouter } from 'expo-router';
+import { useAuth } from '../contexts/authContext';
+
 
 export default function Connexion() {
   const { theme } = useTheme();
+  const router = useRouter();
+  const { connecter } = useAuth();
   const [courriel, setCourriel] = useState('');
   const [motDePasse, setMotDePasse] = useState('');
   const [erreur, setErreur] = useState(null);
   const [chargement, setChargement] = useState(false);
 
   const soumettre = async () => {
+    setErreur(null);
+    setChargement(true);
+    try {
+      await connecter(courriel.trim(), motDePasse);
+      router.replace('/campagnes');
+    } catch (e) {
+      setErreur(e.message);
+    } finally {
+      setChargement(false);
+    }
   };
 
   return (

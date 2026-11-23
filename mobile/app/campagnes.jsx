@@ -7,12 +7,19 @@ import EtatErreur from '../components/EtatErreur';
 import EtatVide from '../components/EtatVide';
 import { useTheme } from '../contexts/themeContext';
 import { useCampagnes } from '../hooks/useCampagnes';
+import { useRouter } from 'expo-router';
+import { useCampagne } from '../contexts/campagneContext';
+
 
 export default function Campagnes() {
   const { theme } = useTheme();
   const { campagnes, chargement, erreur, recharger } = useCampagnes();
+  const router = useRouter();
+  const { choisirCampagne } = useCampagne();
 
   const choisir = (campagne) => {
+    choisirCampagne(campagne);
+    router.replace('/resume');
   };
 
   const creerCampagne = () => {

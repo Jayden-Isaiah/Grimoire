@@ -6,6 +6,8 @@ import { useCampagne } from '../../contexts/campagneContext';
 import { useTheme } from '../../contexts/themeContext';
 import { useReseau } from '../../hooks/useReseau';
 import { useSynchronisation } from '../../hooks/useSynchronisation';
+import { useRouter } from 'expo-router';
+
 
 export default function Parametres() {
   const { theme, nomTheme, changerTheme } = useTheme();
@@ -14,6 +16,18 @@ export default function Parametres() {
   const { horsLigne } = useReseau();
   const { enCours, synchroniserMaintenant } = useSynchronisation();
   const operationsEnAttente = 0;
+  const router = useRouter();
+
+  const changerDeCampagne = () => {
+    quitterCampagne();
+    router.replace('/campagnes');
+  };
+
+  const seDeconnecter = async () => {
+    await deconnecter();
+    quitterCampagne();
+    router.replace('/connexion');
+  };
 
   return (
     <ScrollView style={{ backgroundColor: theme.fond }} contentContainerStyle={styles.contenu}>
@@ -57,8 +71,8 @@ export default function Parametres() {
 
       <Text style={[styles.section, { color: theme.texte }]}>Compte</Text>
       <View style={styles.boutons}>
-        <Bouton titre="Changer de campagne" variante="secondaire" onPress={quitterCampagne} />
-        <Bouton titre="Se déconnecter" onPress={deconnecter} />
+        <Bouton titre="Changer de campagne" variante="secondaire" onPress={changerDeCampagne} />
+        <Bouton titre="Se déconnecter" onPress={seDeconnecter} />
       </View>
     </ScrollView>
   );

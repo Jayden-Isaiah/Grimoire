@@ -1,5 +1,4 @@
 import { useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import BarrePV from '../../components/BarrePV';
 import EtatChargement from '../../components/EtatChargement';
@@ -8,6 +7,8 @@ import LanceurDe from '../../components/LanceurDe';
 import { CARACTERISTIQUES } from '../../constants';
 import { useTheme } from '../../contexts/themeContext';
 import { calculerModificateur, formaterModificateur } from '../../utils/caracteristiques';
+import { useEffect, useState } from 'react';
+import { PERSONNAGES_TEMPORAIRES } from '../../constants/donneesTemporaires';
 
 export default function DetailPersonnage() {
   const { id } = useLocalSearchParams();
@@ -18,7 +19,15 @@ export default function DetailPersonnage() {
   const [selection, setSelection] = useState(CARACTERISTIQUES[0]);
 
   const charger = async () => {
+    setChargement(true);
+    setErreur(null);
+    setPersonnage(PERSONNAGES_TEMPORAIRES.find((p) => p.id === id) ?? null);
+    setChargement(false);
   };
+
+  useEffect(() => {
+    charger();
+  }, [id]);
 
   if (chargement) {
     return <EtatChargement />;

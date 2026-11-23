@@ -1,7 +1,8 @@
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import BanniereHorsLigne from '../../components/BanniereHorsLigne';
-import CartePersonnage from '../../components/CartePersonnage';
+import BannierePersonnage from '../../components/BannierePersonnage';
 import ChampTexte from '../../components/ChampTexte';
 import EtatChargement from '../../components/EtatChargement';
 import EtatErreur from '../../components/EtatErreur';
@@ -12,6 +13,7 @@ import { usePersonnages } from '../../hooks/usePersonnages';
 
 export default function Personnages() {
   const { theme } = useTheme();
+  const router = useRouter();
   const { campagneActive } = useCampagne();
   const { personnages, chargement, erreur, recharger } = usePersonnages(campagneActive?.id);
   const [recherche, setRecherche] = useState('');
@@ -20,9 +22,11 @@ export default function Personnages() {
   };
 
   const ouvrirPersonnage = (personnage) => {
+    router.push(`/personnage/${personnage.id}`);
   };
 
   const ouvrirAjout = () => {
+    router.push('/personnage/ajout');
   };
 
   if (chargement) {
@@ -48,7 +52,7 @@ export default function Personnages() {
             message={recherche ? 'Essayez un autre nom ou une autre classe.' : 'Ajoutez votre premier personnage.'}
           />
         }
-        renderItem={({ item }) => <CartePersonnage personnage={item} onPress={() => ouvrirPersonnage(item)} />}
+        renderItem={({ item }) => <BannierePersonnage personnage={item} onPress={() => ouvrirPersonnage(item)} />}
       />
       <Pressable
         accessibilityRole="button"
@@ -68,6 +72,7 @@ const styles = StyleSheet.create({
   },
   liste: {
     padding: 16,
+    paddingBottom: 96,
     flexGrow: 1,
   },
   flottant: {
