@@ -1,6 +1,8 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import Animated from 'react-native-reanimated';
+import { entreeCascade } from '../../animations/apparitionCascade';
 import BanniereHorsLigne from '../../components/BanniereHorsLigne';
 import BannierePersonnage from '../../components/BannierePersonnage';
 import ChampTexte from '../../components/ChampTexte';
@@ -19,6 +21,14 @@ export default function Personnages() {
   const [recherche, setRecherche] = useState('');
 
   const filtrer = (liste, texte) => {
+    const terme = texte.trim().toLowerCase();
+    if (!terme) {
+      return liste;
+    }
+    return liste.filter(
+      (personnage) =>
+        personnage.nom.toLowerCase().includes(terme) || personnage.classe.toLowerCase().includes(terme),
+    );
   };
 
   const ouvrirPersonnage = (personnage) => {
@@ -40,7 +50,7 @@ export default function Personnages() {
     <View style={[styles.conteneur, { backgroundColor: theme.fond }]}>
       <BanniereHorsLigne />
       <FlatList
-        data={filtrer(personnages, recherche) ?? personnages}
+        data={filtrer(personnages, recherche)}
         keyExtractor={(personnage) => personnage.id}
         contentContainerStyle={styles.liste}
         ListHeaderComponent={
@@ -52,7 +62,11 @@ export default function Personnages() {
             message={recherche ? 'Essayez un autre nom ou une autre classe.' : 'Ajoutez votre premier personnage.'}
           />
         }
-        renderItem={({ item }) => <BannierePersonnage personnage={item} onPress={() => ouvrirPersonnage(item)} />}
+        renderItem={({ item, index }) => (
+          <Animated.View entering={entreeCascade(index)}>
+            <BannierePersonnage personnage={item} onPress={() => ouvrirPersonnage(item)} />
+          </Animated.View>
+        )}
       />
       <Pressable
         accessibilityRole="button"

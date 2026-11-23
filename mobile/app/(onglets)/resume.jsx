@@ -10,7 +10,8 @@ import { useTheme } from '../../contexts/themeContext';
 import { usePersonnages } from '../../hooks/usePersonnages';
 import { calculerResume } from '../../utils/resume';
 import { useRouter } from 'expo-router';
-
+import Animated from 'react-native-reanimated';
+import { entreeCascade } from '../../animations/apparitionCascade';
 
 const RESUME_VIDE = { nombrePersonnages: 0, niveauMoyen: 0, personnagesKo: 0, repartitionClasses: [] };
 
@@ -77,8 +78,10 @@ export default function Resume() {
           </Text>
         ))}
         <Text style={[styles.sousTitre, { color: theme.texte }]}>Personnages</Text>
-        {personnages.map((personnage) => (
-          <CartePersonnage key={personnage.id} personnage={personnage} onPress={() => ouvrirPersonnage(personnage)} />
+        {personnages.map((personnage, index) => (
+          <Animated.View key={personnage.id} entering={entreeCascade(index)}>
+            <CartePersonnage personnage={personnage} onPress={() => ouvrirPersonnage(personnage)} />
+          </Animated.View>
         ))}
         <View style={styles.action}>
           <Bouton titre="Ajouter un personnage" onPress={ouvrirAjout} />
