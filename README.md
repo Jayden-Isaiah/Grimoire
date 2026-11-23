@@ -9,7 +9,7 @@ Application Android de gestion de fiches de personnages pour jeux de rôle (syst
 | Adam Roy | Navigation, écrans, composants, thèmes |
 | Sarragossa Kaiss | Serveur Express, authentification, contrôle d'accès |
 | Jayden Saint-Cyr | Base de données serveur, modèle de données, résumé, APK |
-| À compléter | SQLite mobile, chiffrement, synchronisation, animations |
+| Kevin Emmanuel Jean | SQLite mobile, chiffrement, synchronisation, animations |
 
 ## Technologies
 
