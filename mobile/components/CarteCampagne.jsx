@@ -1,5 +1,7 @@
 import { Pressable, StyleSheet, Text } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { useTheme } from '../contexts/themeContext';
+import { useTransitionCampagne } from '../animations/transitionCampagne';
 
 const ICONES = {
   epee: '⚔️',
@@ -12,12 +14,13 @@ const ICONES = {
 
 export default function CarteCampagne({ campagne, onPress }) {
   const { theme } = useTheme();
+  const { styleAvatar, lancerTransition } = useTransitionCampagne();
 
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={`Campagne ${campagne.nom}`}
-      onPress={onPress}
+      onPress={() => lancerTransition(() => onPress?.(campagne))}
       style={({ pressed }) => [
         styles.carte,
         {
@@ -27,7 +30,9 @@ export default function CarteCampagne({ campagne, onPress }) {
         },
       ]}
     >
-      <Text style={styles.avatar}>{ICONES[campagne.avatar] ?? ICONES.grimoire}</Text>
+      <Animated.Text style={[styles.avatar, styleAvatar]}>
+        {ICONES[campagne.avatar] ?? ICONES.grimoire}
+      </Animated.Text>
       <Text style={[styles.nom, { color: theme.texte }]}>{campagne.nom}</Text>
     </Pressable>
   );

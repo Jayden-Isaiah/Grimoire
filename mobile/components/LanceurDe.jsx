@@ -11,6 +11,16 @@ export default function LanceurDe({ libelle, valeur }) {
   const [resultat, setResultat] = useState(null);
 
   const lancer = () => {
+    lancerAnimation();
+
+    const jetDe = Math.floor(Math.random() * 20) + 1;
+    const modificateur = valeur || 0;
+
+    setResultat({
+      de: jetDe,
+      modificateur,
+      total: jetDe + modificateur,
+    });
   };
 
   return (
