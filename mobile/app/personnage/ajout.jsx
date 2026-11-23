@@ -4,6 +4,7 @@ import Bouton from '../../components/Bouton';
 import ChampTexte from '../../components/ChampTexte';
 import { CARACTERISTIQUES } from '../../constants';
 import { useTheme } from '../../contexts/themeContext';
+import SelecteurImage from '../../components/SelecteurImage';
 
 const FORMULAIRE_VIDE = {
   nom: '',
@@ -19,6 +20,7 @@ const FORMULAIRE_VIDE = {
   sagesse: '10',
   charisme: '10',
   biographie: '',
+  image: null,
 };
 
 export default function AjoutPersonnage() {
@@ -40,6 +42,11 @@ export default function AjoutPersonnage() {
         contentContainerStyle={styles.contenu}
         keyboardShouldPersistTaps="handled"
       >
+        <SelecteurImage
+          libelle="Image de la bannière (facultatif)"
+          valeur={formulaire.image}
+          onChange={modifier('image')}
+        />
         <ChampTexte libelle="Nom" valeur={formulaire.nom} onChangeText={modifier('nom')} erreur={erreurs.nom} />
         <ChampTexte libelle="Race" valeur={formulaire.race} onChangeText={modifier('race')} erreur={erreurs.race} />
         <ChampTexte libelle="Classe" valeur={formulaire.classe} onChangeText={modifier('classe')} erreur={erreurs.classe} />
