@@ -59,18 +59,27 @@ grimoire/
 
 ## Démarrage du serveur
 
-1. Démarrer MySQL et exécuter `serveur/bd/schema.sql` (MySQL Workbench ou `mysql -u root -p < bd/schema.sql`).
-2. Installer et lancer le serveur :
+1. Démarrer MySQL 8 (service Windows `MySQL80`).
+2. Installer, créer la base et lancer le serveur :
 
 ```bash
 cd serveur
 npm install
-cp .env.example .env
-npm run donnees-demo
+cp .env.example .env       # puis renseigner MYSQL_PASSWORD
+npm run bd:creer           # crée la base MYSQL_DATABASE et ses tables (bd/schema.sql)
+npm run donnees-demo       # comptes, campagnes, personnages et journal de démonstration
 npm run dev
 ```
 
 Dans `.env`, renseignez `MYSQL_HOST`, `MYSQL_USER`, `MYSQL_PASSWORD` et `MYSQL_DATABASE`.
+
+| Commande | Effet |
+| --- | --- |
+| `npm run bd:creer` | Crée la base et les tables si elles n'existent pas (sans rien effacer). |
+| `npm run bd:reinitialiser` | **Supprime** la base de développement puis la recrée. À utiliser après une modification de `bd/schema.sql`. |
+| `npm run donnees-demo` | Remet les comptes de démonstration à neuf. Rejouable, ne touche pas aux autres comptes. |
+
+Le modèle de données (entités, relations, règles) est décrit dans [docs/modele-donnees.md](docs/modele-donnees.md).
 
 La colonne `force` est un mot réservé de MySQL : écrivez-la entre accents graves (`` `force` ``) dans les requêtes SQL.
 
@@ -91,7 +100,12 @@ Pour ajouter une dépendance mobile, utilisez `npx expo install <paquet>`.
 
 ## Identifiants de démonstration
 
-À compléter.
+Créés par `npm run donnees-demo` (dans `serveur/`). Mot de passe commun : `Grimoire123!`
+
+| Courriel | Contenu |
+| --- | --- |
+| `joueur@grimoire.test` | 2 campagnes : « Les Terres du Nord » (Aldric, Lyra, Borin à 0 PV) et « La Cité Engloutie » (Maelis, Tobias), avec des entrées de journal. |
+| `rival@grimoire.test` | 1 campagne. Sert à vérifier qu'un compte ne voit jamais les données d'un autre (réponse 404). |
 
 ## Tests
 
@@ -102,6 +116,8 @@ npm test
 cd ../mobile
 npm test
 ```
+
+Les tests du serveur qui touchent aux données (résumé, journal) utilisent une base séparée, `grimoire_test`, créée automatiquement : MySQL doit être démarré, avec les identifiants du `.env`. La base de développement n'est jamais modifiée par les tests.
 
 ## Génération de l'APK
 
