@@ -4,6 +4,7 @@ import Animated from 'react-native-reanimated';
 import { useAnimationDe } from '../animations/animationDe';
 import { useTheme } from '../contexts/themeContext';
 import Bouton from './Bouton';
+import { lancerCaracteristique } from '../utils/caracteristiques';
 
 export default function LanceurDe({ libelle, valeur }) {
   const { theme } = useTheme();
@@ -12,15 +13,7 @@ export default function LanceurDe({ libelle, valeur }) {
 
   const lancer = () => {
     lancerAnimation();
-
-    const jetDe = Math.floor(Math.random() * 20) + 1;
-    const modificateur = valeur || 0;
-
-    setResultat({
-      de: jetDe,
-      modificateur,
-      total: jetDe + modificateur,
-    });
+    setResultat(lancerCaracteristique(valeur));
   };
 
   return (
