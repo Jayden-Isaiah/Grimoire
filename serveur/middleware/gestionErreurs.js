@@ -1,5 +1,9 @@
 const gestionErreurs = (err, req, res, next) => {
-  res.status(500).json({ erreur: 'Erreur interne du serveur' });
+  console.error(err);
+ 
+  res.status(500).json({
+    erreur: 'Erreur interne du serveur',
+  });
 };
-
+ 
 export default gestionErreurs;
