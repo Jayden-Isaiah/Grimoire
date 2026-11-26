@@ -32,7 +32,7 @@ grimoire/
 │   ├── animations/              Dé, barre de PV, transition de campagne, cascade
 │   ├── assets/colorsPalette.js  Trois thèmes : parchemin, donjon, arcane
 │   ├── components/              Composants réutilisables
-│   ├── constants/               URL de l'API, statuts, caractéristiques
+│   ├── constants/               URL de l'API, statuts, caractéristiques, données temporaires
 │   ├── contexts/                authContext, campagneContext, themeContext
 │   ├── database/                SQLite locale, migrations, accès aux données
 │   ├── hooks/                   useCampagnes, usePersonnages, useReseau, useSynchronisation
@@ -51,10 +51,10 @@ grimoire/
 │   ├── routes/
 │   ├── services/                Requêtes SQL
 │   ├── validateurs/
-│   ├── scripts/initialiser.js   Données de démonstration
+│   ├── scripts/                 creerBase.js (création de la base), initialiser.js (données de démonstration)
 │   └── tests/
-├── docs/
-└── .github/
+├── docs/                    Planification, modèle de données (modele-donnees.md)
+└── .github/                 Modèles d'issue et de pull request
 ```
 
 ## Démarrage du serveur
@@ -98,7 +98,18 @@ Scannez le code QR avec Expo Go. Dans `.env`, `EXPO_PUBLIC_BACKEND_IP` doit cont
 
 Pour ajouter une dépendance mobile, utilisez `npx expo install <paquet>`.
 
+## Données temporaires (livrable 2)
+
+Le prototype n'est pas encore relié à l'API. Les éléments suivants sont temporaires et seront remplacés au livrable 3 :
+
+- La connexion accepte n'importe quel courriel et mot de passe non vides (`mobile/contexts/authContext.js`, constante `SESSION_TEMPORAIRE`).
+- Les campagnes et les personnages affichés viennent de `mobile/constants/donneesTemporaires.js`.
+- Les personnages ajoutés sont gardés en mémoire seulement : ils disparaissent au redémarrage de l'application.
+- Le bouton « Nouvelle campagne » et la synchronisation ne sont pas encore actifs.
+
 ## Identifiants de démonstration
+
+Pour l'instant, l'application mobile accepte n'importe quels identifiants (voir « Données temporaires »). Les comptes ci-dessous servent au serveur et seront utilisés par l'application à partir du livrable 3.
 
 Créés par `npm run donnees-demo` (dans `serveur/`). Mot de passe commun : `Grimoire123!`
 
@@ -125,12 +136,32 @@ Les tests du serveur qui touchent aux données (résumé, journal) utilisent une
 
 ## Limites connues
 
-À compléter.
+- Livrable 2 : l'application utilise des données temporaires et n'appelle pas encore l'API (voir « Données temporaires »).
+- L'image de bannière d'un personnage est conservée seulement sur l'appareil qui l'a choisie : elle n'est pas envoyée au serveur.
+- Au cégep, Expo Go ne peut joindre l'ordinateur que depuis le conteneur du cours (`ssh`) : lancer `npx expo start` dans le conteneur.
+- Les tests du serveur qui touchent aux données exigent un serveur MySQL démarré.
 
 ## Ressources externes
 
-À compléter.
+| Ressource | Utilisation | Licence |
+| --- | --- | --- |
+| Expo, expo-router, expo-sqlite, expo-secure-store, expo-crypto, expo-image-picker | Application mobile, navigation, stockage local, chiffrement, choix d'image | MIT |
+| React Native, React Native Reanimated, NetInfo | Interface, animations, état du réseau | MIT |
+| axios | Appels à l'API REST | MIT |
+| Express, cors, dotenv, mysql2, bcryptjs, nodemon | Serveur, base de données, hachage des mots de passe | MIT |
+| Jest, jest-expo, Supertest | Tests automatisés | MIT |
+| Émojis des avatars et des onglets | Icônes affichées par le système du téléphone | — |
+
+Les notes de cours 420-512 (https://cegepmv.github.io/420512/) ont servi de référence pour la structure du projet (expo-router, contextes, Reanimated, Express et mysql2).
 
 ## Utilisation de l'intelligence artificielle
 
-À compléter : principaux usages (génération initiale, débogage, refactorisation, tests, documentation ou autre).
+L'équipe a utilisé Claude (Anthropic) comme outil d'apprentissage et de soutien :
+
+- **Génération initiale** : structure du dépôt, squelette des écrans et des composants (fonctions vides), schéma de la base de données.
+- **Explications** : fonctionnement d'expo-router, des contextes, de Reanimated, de mysql2 et du contrôle d'accès.
+- **Débogage et revue** : relecture des pull requests, correction d'erreurs (import en double, calcul des modificateurs, fichiers `.env.example` supprimés).
+- **Tests** : aide à la rédaction des tests de validation du formulaire.
+- **Documentation** : document de planification du livrable 1 et sections de ce README.
+
+Chaque membre a relu, testé et adapté le code produit avec cet outil, et doit pouvoir l'expliquer et le modifier.
