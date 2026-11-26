@@ -1,23 +1,22 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { CLASSES } from '../constants/classes';
 import { useTheme } from '../contexts/themeContext';
 
-export default function SelecteurClasse({ valeur, onChange, erreur }) {
+export default function SelecteurOptions({ libelle, options, valeur, onChange, erreur }) {
   const { theme } = useTheme();
 
   return (
     <View style={styles.conteneur}>
-      <Text style={[styles.libelle, { color: theme.texte }]}>Classe</Text>
+      <Text style={[styles.libelle, { color: theme.texte }]}>{libelle}</Text>
       <View style={styles.grille}>
-        {CLASSES.map((classe) => {
-          const choisie = valeur === classe.nom;
+        {options.map((option) => {
+          const choisie = valeur === option.valeur;
           return (
             <Pressable
-              key={classe.nom}
+              key={option.valeur}
               accessibilityRole="button"
-              accessibilityLabel={`${classe.nom}, dé de vie d${classe.deVie}`}
+              accessibilityLabel={`${option.titre}, ${option.sousTitre}`}
               accessibilityState={{ selected: choisie }}
-              onPress={() => onChange(classe.nom)}
+              onPress={() => onChange(option.valeur)}
               style={[
                 styles.option,
                 {
@@ -26,8 +25,10 @@ export default function SelecteurClasse({ valeur, onChange, erreur }) {
                 },
               ]}
             >
-              <Text style={[styles.nom, { color: choisie ? theme.surPrimaire : theme.texte }]}>{classe.nom}</Text>
-              <Text style={[styles.de, { color: choisie ? theme.surPrimaire : theme.texteSecondaire }]}>d{classe.deVie}</Text>
+              <Text style={[styles.titre, { color: choisie ? theme.surPrimaire : theme.texte }]}>{option.titre}</Text>
+              <Text style={[styles.sousTitre, { color: choisie ? theme.surPrimaire : theme.texteSecondaire }]}>
+                {option.sousTitre}
+              </Text>
             </Pressable>
           );
         })}
@@ -54,15 +55,18 @@ const styles = StyleSheet.create({
     width: '31%',
     alignItems: 'center',
     paddingVertical: 8,
+    paddingHorizontal: 4,
     borderWidth: 1,
     borderRadius: 10,
   },
-  nom: {
+  titre: {
     fontSize: 14,
     fontWeight: '600',
+    textAlign: 'center',
   },
-  de: {
-    fontSize: 12,
+  sousTitre: {
+    fontSize: 11,
+    textAlign: 'center',
   },
   erreur: {
     fontSize: 13,

@@ -5,14 +5,20 @@ import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } fr
 import Bouton from '../../components/Bouton';
 import ChampTexte from '../../components/ChampTexte';
 import { CARACTERISTIQUES, STATUTS_SYNC } from '../../constants';
+import { CLASSES } from '../../constants/classes';
+import { RACES } from '../../constants/races';
 import { ajouterPersonnageTemporaire } from '../../constants/donneesTemporaires';
 import { useCampagne } from '../../contexts/campagneContext';
 import { useTheme } from '../../contexts/themeContext';
-import SelecteurClasse from '../../components/SelecteurClasse';
+import SelecteurOptions from '../../components/SelecteurOptions';
 import SelecteurImage from '../../components/SelecteurImage';
 import { calculerModificateur, formaterModificateur } from '../../utils/caracteristiques';
 import { calculerPvMax } from '../../utils/pointsDeVie';
 import { convertirFormulaire, validerPersonnage } from '../../utils/validation';
+
+const OPTIONS_RACES = RACES.map((race) => ({ valeur: race.nom, titre: race.nom, sousTitre: race.description }));
+
+const OPTIONS_CLASSES = CLASSES.map((classe) => ({ valeur: classe.nom, titre: classe.nom, sousTitre: `d${classe.deVie}` }));
 
 const FORMULAIRE_VIDE = {
   nom: '',
@@ -83,8 +89,20 @@ export default function AjoutPersonnage() {
           onChange={modifier('image')}
         />
         <ChampTexte libelle="Nom" valeur={formulaire.nom} onChangeText={modifier('nom')} erreur={erreurs.nom} />
-        <ChampTexte libelle="Race" valeur={formulaire.race} onChangeText={modifier('race')} erreur={erreurs.race} />
-        <SelecteurClasse valeur={formulaire.classe} onChange={modifier('classe')} erreur={erreurs.classe} />
+        <SelecteurOptions
+          libelle="Race"
+          options={OPTIONS_RACES}
+          valeur={formulaire.race}
+          onChange={modifier('race')}
+          erreur={erreurs.race}
+        />
+        <SelecteurOptions
+          libelle="Classe"
+          options={OPTIONS_CLASSES}
+          valeur={formulaire.classe}
+          onChange={modifier('classe')}
+          erreur={erreurs.classe}
+        />
 
         <View style={styles.ligne}>
           <View style={styles.colonne}>

@@ -39,6 +39,10 @@ describe('validerPersonnage', () => {
     expect(erreurs.pvActuels).toBeDefined();
   });
 
+  it('refuse une race qui n’est pas dans la liste', () => {
+    expect(validerPersonnage(personnageValide({ race: 'Orque' })).erreurs.race).toBeDefined();
+  });
+
   it('refuse une classe qui n’est pas dans la liste', () => {
     expect(validerPersonnage(personnageValide({ classe: 'Chevalier' })).erreurs.classe).toBeDefined();
   });

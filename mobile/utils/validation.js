@@ -1,5 +1,6 @@
 import { AVATARS, CARACTERISTIQUES } from '../constants';
 import { trouverClasse } from '../constants/classes';
+import { trouverRace } from '../constants/races';
 import { calculerPvMax } from './pointsDeVie';
 
 const estEntierEntre = (valeur, min, max) => Number.isInteger(valeur) && valeur >= min && valeur <= max;
@@ -12,8 +13,8 @@ export const validerPersonnage = (personnage) => {
   if (longueur(personnage.nom) < 2 || longueur(personnage.nom) > 40) {
     erreurs.nom = 'Le nom doit contenir entre 2 et 40 caractères.';
   }
-  if (longueur(personnage.race) === 0) {
-    erreurs.race = 'La race est requise.';
+  if (!trouverRace(personnage.race)) {
+    erreurs.race = 'Choisissez une race.';
   }
   if (!trouverClasse(personnage.classe)) {
     erreurs.classe = 'Choisissez une classe.';
@@ -40,7 +41,7 @@ export const convertirFormulaire = (formulaire) => {
   const nombre = (texte) => (texte === '' ? NaN : Number(texte));
   const personnage = {
     nom: formulaire.nom.trim(),
-    race: formulaire.race.trim(),
+    race: formulaire.race,
     classe: formulaire.classe,
     niveau: nombre(formulaire.niveau),
     biographie: formulaire.biographie.trim() || null,
