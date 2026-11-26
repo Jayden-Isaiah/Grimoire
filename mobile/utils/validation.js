@@ -1,4 +1,4 @@
-import { CARACTERISTIQUES } from '../constants';
+import { AVATARS, CARACTERISTIQUES } from '../constants';
 
 const estEntierEntre = (valeur, min, max) => Number.isInteger(valeur) && valeur >= min && valeur <= max;
 
@@ -50,4 +50,43 @@ export const convertirFormulaire = (formulaire) => {
     personnage[cle] = nombre(formulaire[cle]);
   }
   return personnage;
+};
+export const estDateValide = (valeur) => {
+  if (typeof valeur !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(valeur)) {
+    return false;
+  }
+  const [annee, mois, jour] = valeur.split('-').map(Number);
+  const date = new Date(Date.UTC(annee, mois - 1, jour));
+  return date.getUTCFullYear() === annee && date.getUTCMonth() === mois - 1 && date.getUTCDate() === jour;
+};
+
+export const validerEntreeJournal = (entree) => {
+  const erreurs = {};
+
+  if (longueur(entree.titre) === 0) {
+    erreurs.titre = 'Le titre est requis.';
+  } else if (longueur(entree.titre) > 100) {
+    erreurs.titre = '100 caractères maximum.';
+  }
+  if (longueur(entree.contenu) === 0) {
+    erreurs.contenu = 'Le contenu est requis.';
+  }
+  if (!estDateValide(entree.dateSession)) {
+    erreurs.dateSession = 'Date invalide (format AAAA-MM-JJ).';
+  }
+
+  return { valide: Object.keys(erreurs).length === 0, erreurs };
+};
+
+export const validerCampagne = (campagne) => {
+  const erreurs = {};
+
+  if (longueur(campagne.nom) < 2 || longueur(campagne.nom) > 60) {
+    erreurs.nom = 'Le nom doit contenir entre 2 et 60 caractères.';
+  }
+  if (!AVATARS.includes(campagne.avatar)) {
+    erreurs.avatar = 'Choisissez un avatar.';
+  }
+
+  return { valide: Object.keys(erreurs).length === 0, erreurs };
 };

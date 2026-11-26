@@ -1,16 +1,9 @@
 import { Pressable, StyleSheet, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { ICONES_AVATARS } from '../constants';
 import { useTheme } from '../contexts/themeContext';
 import { useTransitionCampagne } from '../animations/transitionCampagne';
 
-const ICONES = {
-  epee: '⚔️',
-  dragon: '🐉',
-  chateau: '🏰',
-  grimoire: '📖',
-  crane: '💀',
-  etoile: '✨',
-};
 
 export default function CarteCampagne({ campagne, onPress }) {
   const { theme } = useTheme();
@@ -31,7 +24,7 @@ export default function CarteCampagne({ campagne, onPress }) {
       ]}
     >
       <Animated.Text style={[styles.avatar, styleAvatar]}>
-        {ICONES[campagne.avatar] ?? ICONES.grimoire}
+        {ICONES_AVATARS[campagne.avatar] ?? ICONES_AVATARS.grimoire}
       </Animated.Text>
       <Text style={[styles.nom, { color: theme.texte }]}>{campagne.nom}</Text>
     </Pressable>

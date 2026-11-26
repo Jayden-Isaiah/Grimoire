@@ -1,4 +1,4 @@
-import { convertirFormulaire, validerPersonnage } from '../utils/validation';
+import { convertirFormulaire, validerCampagne, validerEntreeJournal, validerPersonnage } from '../utils/validation';
 
 const personnageValide = (changements = {}) => ({
   nom: 'Aldric',
@@ -77,5 +77,40 @@ describe('convertirFormulaire', () => {
       biographie: '', image: null,
     });
     expect(validerPersonnage(personnage).erreurs.niveau).toBeDefined();
+  });
+});
+describe('validerEntreeJournal', () => {
+  const entreeValide = (changements = {}) => ({
+    titre: 'Embuscade',
+    contenu: 'Le groupe est attaqué dans le col.',
+    dateSession: '2026-11-21',
+    ...changements,
+  });
+
+  it('accepte une entrée valide', () => {
+    expect(validerEntreeJournal(entreeValide()).valide).toBe(true);
+  });
+
+  it('refuse un titre ou un contenu vide', () => {
+    const { erreurs } = validerEntreeJournal(entreeValide({ titre: ' ', contenu: '' }));
+    expect(erreurs.titre).toBeDefined();
+    expect(erreurs.contenu).toBeDefined();
+  });
+
+  it('refuse une date impossible ou mal formée', () => {
+    expect(validerEntreeJournal(entreeValide({ dateSession: '2026-02-30' })).erreurs.dateSession).toBeDefined();
+    expect(validerEntreeJournal(entreeValide({ dateSession: '21/11/2026' })).erreurs.dateSession).toBeDefined();
+  });
+});
+
+describe('validerCampagne', () => {
+  it('accepte une campagne valide', () => {
+    expect(validerCampagne({ nom: 'Les Terres du Nord', avatar: 'dragon' }).valide).toBe(true);
+  });
+
+  it('refuse un nom trop court et un avatar inconnu', () => {
+    const { erreurs } = validerCampagne({ nom: 'A', avatar: 'licorne' });
+    expect(erreurs.nom).toBeDefined();
+    expect(erreurs.avatar).toBeDefined();
   });
 });
