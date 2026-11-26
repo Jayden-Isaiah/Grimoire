@@ -1,6 +1,8 @@
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import BarrePV from '../../components/BarrePV';
+import Bouton from '../../components/Bouton';
+import CarteEntreeJournal from '../../components/CarteEntreeJournal';
 import EtatChargement from '../../components/EtatChargement';
 import EtatErreur from '../../components/EtatErreur';
 import LanceurDe from '../../components/LanceurDe';
@@ -9,10 +11,13 @@ import { useTheme } from '../../contexts/themeContext';
 import { calculerModificateur, formaterModificateur } from '../../utils/caracteristiques';
 import { useEffect, useState } from 'react';
 import { PERSONNAGES_TEMPORAIRES } from '../../constants/donneesTemporaires';
+import { useJournal } from '../../hooks/useJournal';
 
 export default function DetailPersonnage() {
   const { id } = useLocalSearchParams();
   const { theme } = useTheme();
+  const router = useRouter();
+  const { entrees } = useJournal([id]);
   const [personnage, setPersonnage] = useState(null);
   const [chargement, setChargement] = useState(true);
   const [erreur, setErreur] = useState(null);
@@ -78,6 +83,16 @@ export default function DetailPersonnage() {
           <Text style={[styles.texteBiographie, { color: theme.texte }]}>{personnage.biographie}</Text>
         </View>
       ) : null}
+
+      <View style={styles.journal}>
+        <Text style={[styles.titreSection, { color: theme.texte }]}>Journal de session</Text>
+        {entrees.length === 0 ? (
+          <Text style={[styles.journalVide, { color: theme.texteSecondaire }]}>Aucune entrée pour l’instant.</Text>
+        ) : (
+          entrees.map((entree) => <CarteEntreeJournal key={entree.id} entree={entree} />)
+        )}
+        <Bouton titre="Ajouter une entrée" variante="secondaire" onPress={() => router.push(`/personnage/journal/${id}`)} />
+      </View>
     </ScrollView>
   );
 }
@@ -126,5 +141,12 @@ const styles = StyleSheet.create({
   },
   texteBiographie: {
     lineHeight: 22,
+  },
+  journal: {
+    marginTop: 24,
+    marginBottom: 16,
+  },
+  journalVide: {
+    marginBottom: 8,
   },
 });

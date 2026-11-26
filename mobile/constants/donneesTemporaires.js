@@ -24,3 +24,23 @@ export const PERSONNAGES_TEMPORAIRES = [
 export const ajouterPersonnageTemporaire = (personnage) => {
   PERSONNAGES_TEMPORAIRES.push(personnage);
 };
+export const ENTREES_JOURNAL_TEMPORAIRES = [
+  {
+    id: 'j1', personnageId: 'p1', titre: 'Arrivée à Fort-Givre',
+    contenu: 'Le groupe atteint le fort au crépuscule. Aldric négocie l’entrée avec le capitaine de la garde.',
+    dateSession: '2026-11-14', creeLe: '2026-11-14T20:00:00.000Z', statutSync: 'SYNCHRONISE',
+  },
+  {
+    id: 'j2', personnageId: 'p3', titre: 'Embuscade dans le col',
+    contenu: 'Borin s’interpose pour protéger Lyra et tombe à 0 PV.',
+    dateSession: '2026-11-21', creeLe: '2026-11-21T21:30:00.000Z', statutSync: 'SYNCHRONISE',
+  },
+];
+
+export const ajouterCampagneTemporaire = (campagne) => {
+  CAMPAGNES_TEMPORAIRES.push(campagne);
+};
+
+export const ajouterEntreeJournalTemporaire = (entree) => {
+  ENTREES_JOURNAL_TEMPORAIRES.push(entree);
+};

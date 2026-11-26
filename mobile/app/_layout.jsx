@@ -17,6 +17,8 @@ export default function RootLayout() {
               <Stack.Screen name="(onglets)" options={{ headerShown: false }} />
               <Stack.Screen name="personnage/[id]" options={{ title: 'Personnage' }} />
               <Stack.Screen name="personnage/ajout" options={{ title: 'Nouveau personnage', presentation: 'modal' }} />
+              <Stack.Screen name="personnage/journal/[id]" options={{ title: 'Nouvelle entrée de journal', presentation: 'modal' }} />
+              <Stack.Screen name="campagne/nouvelle" options={{ title: 'Nouvelle campagne', presentation: 'modal' }} />
             </Stack>
           </CampagneProvider>
         </AuthProvider>

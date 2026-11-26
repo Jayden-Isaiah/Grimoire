@@ -8,6 +8,15 @@ export const STATUTS_SYNC = {
 
 export const AVATARS = ['epee', 'dragon', 'chateau', 'grimoire', 'crane', 'etoile'];
 
+export const ICONES_AVATARS = {
+  epee: '⚔️',
+  dragon: '🐉',
+  chateau: '🏰',
+  grimoire: '📖',
+  crane: '💀',
+  etoile: '✨',
+};
+
 export const CARACTERISTIQUES = [
   { cle: 'force', libelle: 'Force', abreviation: 'FOR' },
   { cle: 'dexterite', libelle: 'Dextérité', abreviation: 'DEX' },

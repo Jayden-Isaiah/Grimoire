@@ -23,6 +23,7 @@ export default function Campagnes() {
   };
 
   const creerCampagne = () => {
+    router.push('/campagne/nouvelle');
   };
 
   if (chargement && campagnes.length === 0) {

@@ -1,12 +1,14 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import BanniereHorsLigne from '../../components/BanniereHorsLigne';
 import Bouton from '../../components/Bouton';
+import CarteEntreeJournal from '../../components/CarteEntreeJournal';
 import CartePersonnage from '../../components/CartePersonnage';
 import EtatChargement from '../../components/EtatChargement';
 import EtatErreur from '../../components/EtatErreur';
 import EtatVide from '../../components/EtatVide';
 import { useCampagne } from '../../contexts/campagneContext';
 import { useTheme } from '../../contexts/themeContext';
+import { useJournal } from '../../hooks/useJournal';
 import { usePersonnages } from '../../hooks/usePersonnages';
 import { calculerResume } from '../../utils/resume';
 import { useRouter } from 'expo-router';
@@ -30,7 +32,8 @@ export default function Resume() {
   const { theme } = useTheme();
   const { campagneActive } = useCampagne();
   const { personnages, chargement, erreur, recharger } = usePersonnages(campagneActive?.id);
-  const resume = calculerResume(personnages) ?? RESUME_VIDE;
+  const { entrees } = useJournal(personnages.map((personnage) => personnage.id));
+  const resume = calculerResume(personnages, entrees) ?? RESUME_VIDE;
   const router = useRouter();
 
   const ouvrirPersonnage = (personnage) => {
@@ -77,6 +80,15 @@ export default function Resume() {
             {classe} : {nombre}
           </Text>
         ))}
+        {resume.derniereEntreeJournal ? (
+          <>
+            <Text style={[styles.sousTitre, { color: theme.texte }]}>Dernière entrée de journal</Text>
+            <CarteEntreeJournal
+              entree={resume.derniereEntreeJournal}
+              nomPersonnage={resume.derniereEntreeJournal.personnageNom}
+            />
+          </>
+        ) : null}
         <Text style={[styles.sousTitre, { color: theme.texte }]}>Personnages</Text>
         {personnages.map((personnage, index) => (
           <Animated.View key={personnage.id} entering={entreeCascade(index)}>

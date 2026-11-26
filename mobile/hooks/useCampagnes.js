@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
 import { CAMPAGNES_TEMPORAIRES } from '../constants/donneesTemporaires';
 
 export const useCampagnes = () => {
@@ -6,16 +7,18 @@ export const useCampagnes = () => {
   const [chargement, setChargement] = useState(true);
   const [erreur, setErreur] = useState(null);
 
-  const recharger = async () => {
+  const recharger = useCallback(async () => {
     setChargement(true);
     setErreur(null);
-    setCampagnes(CAMPAGNES_TEMPORAIRES);
+    setCampagnes([...CAMPAGNES_TEMPORAIRES]);
     setChargement(false);
-  };
-
-  useEffect(() => {
-    recharger();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      recharger();
+    }, [recharger]),
+  );
 
   return { campagnes, chargement, erreur, recharger };
 };
