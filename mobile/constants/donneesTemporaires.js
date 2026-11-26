@@ -10,13 +10,13 @@ export const PERSONNAGES_TEMPORAIRES = [
     biographie: 'Ancien garde de la cité, il protège le groupe.', statutSync: 'SYNCHRONISE',
   },
   {
-    id: 'p2', campagneId: 'c1', nom: 'Lyra', race: 'Elfe', classe: 'Magicienne', niveau: 3,
-    pvMax: 16, pvActuels: 9, force: 8, dexterite: 14, constitution: 12, intelligence: 17, sagesse: 13, charisme: 11,
+    id: 'p2', campagneId: 'c1', nom: 'Lyra', race: 'Elfe', classe: 'Magicien', niveau: 3,
+    pvMax: 17, pvActuels: 9, force: 8, dexterite: 14, constitution: 12, intelligence: 17, sagesse: 13, charisme: 11,
     biographie: null, statutSync: 'EN_ATTENTE',
   },
   {
     id: 'p3', campagneId: 'c1', nom: 'Borin', race: 'Nain', classe: 'Clerc', niveau: 2,
-    pvMax: 19, pvActuels: 0, force: 13, dexterite: 9, constitution: 15, intelligence: 10, sagesse: 16, charisme: 12,
+    pvMax: 17, pvActuels: 0, force: 13, dexterite: 9, constitution: 15, intelligence: 10, sagesse: 16, charisme: 12,
     biographie: null, statutSync: 'SYNCHRONISE',
   },
 ];
