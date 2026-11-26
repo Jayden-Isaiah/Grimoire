@@ -1,4 +1,7 @@
 import { AVATARS, CARACTERISTIQUES } from '../constants';
+import { trouverClasse } from '../constants/classes';
+import { trouverRace } from '../constants/races';
+import { calculerPvMax } from './pointsDeVie';
 
 const estEntierEntre = (valeur, min, max) => Number.isInteger(valeur) && valeur >= min && valeur <= max;
 
@@ -10,11 +13,11 @@ export const validerPersonnage = (personnage) => {
   if (longueur(personnage.nom) < 2 || longueur(personnage.nom) > 40) {
     erreurs.nom = 'Le nom doit contenir entre 2 et 40 caractères.';
   }
-  if (longueur(personnage.race) === 0) {
-    erreurs.race = 'La race est requise.';
+  if (!trouverRace(personnage.race)) {
+    erreurs.race = 'Choisissez une race.';
   }
-  if (longueur(personnage.classe) === 0) {
-    erreurs.classe = 'La classe est requise.';
+  if (!trouverClasse(personnage.classe)) {
+    erreurs.classe = 'Choisissez une classe.';
   }
   if (!estEntierEntre(personnage.niveau, 1, 20)) {
     erreurs.niveau = 'Entre 1 et 20.';
@@ -38,17 +41,17 @@ export const convertirFormulaire = (formulaire) => {
   const nombre = (texte) => (texte === '' ? NaN : Number(texte));
   const personnage = {
     nom: formulaire.nom.trim(),
-    race: formulaire.race.trim(),
-    classe: formulaire.classe.trim(),
+    race: formulaire.race,
+    classe: formulaire.classe,
     niveau: nombre(formulaire.niveau),
-    pvMax: nombre(formulaire.pvMax),
-    pvActuels: nombre(formulaire.pvActuels === '' ? formulaire.pvMax : formulaire.pvActuels),
     biographie: formulaire.biographie.trim() || null,
     image: formulaire.image ?? null,
   };
   for (const { cle } of CARACTERISTIQUES) {
     personnage[cle] = nombre(formulaire[cle]);
   }
+  personnage.pvMax = calculerPvMax(personnage.classe, personnage.niveau, personnage.constitution);
+  personnage.pvActuels = formulaire.pvActuels === '' ? personnage.pvMax : nombre(formulaire.pvActuels);
   return personnage;
 };
 export const estDateValide = (valeur) => {

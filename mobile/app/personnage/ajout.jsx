@@ -5,18 +5,26 @@ import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } fr
 import Bouton from '../../components/Bouton';
 import ChampTexte from '../../components/ChampTexte';
 import { CARACTERISTIQUES, STATUTS_SYNC } from '../../constants';
+import { CLASSES } from '../../constants/classes';
+import { RACES } from '../../constants/races';
 import { ajouterPersonnageTemporaire } from '../../constants/donneesTemporaires';
 import { useCampagne } from '../../contexts/campagneContext';
 import { useTheme } from '../../contexts/themeContext';
+import SelecteurOptions from '../../components/SelecteurOptions';
 import SelecteurImage from '../../components/SelecteurImage';
+import { calculerModificateur, formaterModificateur } from '../../utils/caracteristiques';
+import { calculerPvMax } from '../../utils/pointsDeVie';
 import { convertirFormulaire, validerPersonnage } from '../../utils/validation';
+
+const OPTIONS_RACES = RACES.map((race) => ({ valeur: race.nom, titre: race.nom, sousTitre: race.description }));
+
+const OPTIONS_CLASSES = CLASSES.map((classe) => ({ valeur: classe.nom, titre: classe.nom, sousTitre: `d${classe.deVie}` }));
 
 const FORMULAIRE_VIDE = {
   nom: '',
   race: '',
   classe: '',
   niveau: '1',
-  pvMax: '10',
   pvActuels: '',
   force: '10',
   dexterite: '10',
@@ -38,6 +46,9 @@ export default function AjoutPersonnage() {
   const [erreurGenerale, setErreurGenerale] = useState(null);
 
   const modifier = (champ) => (texte) => setFormulaire((precedent) => ({ ...precedent, [champ]: texte }));
+
+  const pvMaxCalcule = calculerPvMax(formulaire.classe, Number(formulaire.niveau), Number(formulaire.constitution));
+  const modificateurCon = calculerModificateur(Number(formulaire.constitution));
 
   const enregistrer = async () => {
     const donnees = convertirFormulaire(formulaire);
@@ -78,8 +89,20 @@ export default function AjoutPersonnage() {
           onChange={modifier('image')}
         />
         <ChampTexte libelle="Nom" valeur={formulaire.nom} onChangeText={modifier('nom')} erreur={erreurs.nom} />
-        <ChampTexte libelle="Race" valeur={formulaire.race} onChangeText={modifier('race')} erreur={erreurs.race} />
-        <ChampTexte libelle="Classe" valeur={formulaire.classe} onChangeText={modifier('classe')} erreur={erreurs.classe} />
+        <SelecteurOptions
+          libelle="Race"
+          options={OPTIONS_RACES}
+          valeur={formulaire.race}
+          onChange={modifier('race')}
+          erreur={erreurs.race}
+        />
+        <SelecteurOptions
+          libelle="Classe"
+          options={OPTIONS_CLASSES}
+          valeur={formulaire.classe}
+          onChange={modifier('classe')}
+          erreur={erreurs.classe}
+        />
 
         <View style={styles.ligne}>
           <View style={styles.colonne}>
@@ -92,13 +115,12 @@ export default function AjoutPersonnage() {
             />
           </View>
           <View style={styles.colonne}>
-            <ChampTexte
-              libelle="PV max"
-              valeur={formulaire.pvMax}
-              onChangeText={modifier('pvMax')}
-              erreur={erreurs.pvMax}
-              keyboardType="number-pad"
-            />
+            <Text style={[styles.libellePv, { color: theme.texte }]}>PV max (calculés)</Text>
+            <View style={[styles.pvMax, { backgroundColor: theme.surface, borderColor: theme.bordure }]}>
+              <Text style={[styles.valeurPv, { color: theme.primaire }]}>
+                {Number.isNaN(pvMaxCalcule) ? '—' : pvMaxCalcule}
+              </Text>
+            </View>
           </View>
           <View style={styles.colonne}>
             <ChampTexte
@@ -107,10 +129,16 @@ export default function AjoutPersonnage() {
               onChangeText={modifier('pvActuels')}
               erreur={erreurs.pvActuels}
               keyboardType="number-pad"
-              placeholder={formulaire.pvMax}
+              placeholder={Number.isNaN(pvMaxCalcule) ? '' : String(pvMaxCalcule)}
             />
           </View>
         </View>
+
+        <Text style={[styles.aide, { color: theme.texteSecondaire }]}>
+          {Number.isNaN(pvMaxCalcule)
+            ? 'Choisissez une classe et un niveau pour calculer les PV.'
+            : `Dé de vie maximal au niveau 1, puis la moyenne du dé à chaque niveau, plus le modificateur de Constitution (${formaterModificateur(modificateurCon)}) par niveau.`}
+        </Text>
 
         <Text style={[styles.section, { color: theme.texte }]}>Caractéristiques</Text>
         <View style={styles.grille}>
@@ -154,6 +182,24 @@ const styles = StyleSheet.create({
   },
   colonne: {
     flex: 1,
+  },
+  libellePv: {
+    fontSize: 13,
+    marginBottom: 4,
+  },
+  pvMax: {
+    borderWidth: 1,
+    borderRadius: 6,
+    paddingVertical: 9,
+    alignItems: 'center',
+  },
+  valeurPv: {
+    fontSize: 18,
+    fontWeight: '800',
+  },
+  aide: {
+    fontSize: 13,
+    marginBottom: 16,
   },
   section: {
     fontSize: 16,

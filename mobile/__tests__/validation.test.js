@@ -39,6 +39,14 @@ describe('validerPersonnage', () => {
     expect(erreurs.pvActuels).toBeDefined();
   });
 
+  it('refuse une race qui n’est pas dans la liste', () => {
+    expect(validerPersonnage(personnageValide({ race: 'Orque' })).erreurs.race).toBeDefined();
+  });
+
+  it('refuse une classe qui n’est pas dans la liste', () => {
+    expect(validerPersonnage(personnageValide({ classe: 'Chevalier' })).erreurs.classe).toBeDefined();
+  });
+
   it('refuse une caractéristique hors de 1 à 20', () => {
     expect(validerPersonnage(personnageValide({ force: 25 })).erreurs.force).toBeDefined();
   });
@@ -49,9 +57,8 @@ describe('convertirFormulaire', () => {
     const formulaire = {
       nom: ' Lyra ',
       race: 'Elfe',
-      classe: 'Magicienne',
+      classe: 'Magicien',
       niveau: '3',
-      pvMax: '16',
       pvActuels: '',
       force: '8',
       dexterite: '14',
@@ -65,14 +72,15 @@ describe('convertirFormulaire', () => {
     const personnage = convertirFormulaire(formulaire);
     expect(personnage.nom).toBe('Lyra');
     expect(personnage.niveau).toBe(3);
-    expect(personnage.pvActuels).toBe(16);
+    expect(personnage.pvMax).toBe(17);
+    expect(personnage.pvActuels).toBe(17);
     expect(personnage.biographie).toBeNull();
     expect(validerPersonnage(personnage).valide).toBe(true);
   });
 
   it('transforme un champ numérique vide en valeur invalide', () => {
     const personnage = convertirFormulaire({
-      nom: 'Test', race: 'Humain', classe: 'Barde', niveau: '', pvMax: '10', pvActuels: '10',
+      nom: 'Test', race: 'Humain', classe: 'Barde', niveau: '', pvActuels: '',
       force: '10', dexterite: '10', constitution: '10', intelligence: '10', sagesse: '10', charisme: '10',
       biographie: '', image: null,
     });
