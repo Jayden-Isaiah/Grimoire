@@ -20,3 +20,7 @@ export const PERSONNAGES_TEMPORAIRES = [
     biographie: null, statutSync: 'SYNCHRONISE',
   },
 ];
+
+export const ajouterPersonnageTemporaire = (personnage) => {
+  PERSONNAGES_TEMPORAIRES.push(personnage);
+};
