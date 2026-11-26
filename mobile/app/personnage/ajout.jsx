@@ -1,10 +1,15 @@
+import * as Crypto from 'expo-crypto';
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Bouton from '../../components/Bouton';
 import ChampTexte from '../../components/ChampTexte';
-import { CARACTERISTIQUES } from '../../constants';
+import { CARACTERISTIQUES, STATUTS_SYNC } from '../../constants';
+import { ajouterPersonnageTemporaire } from '../../constants/donneesTemporaires';
+import { useCampagne } from '../../contexts/campagneContext';
 import { useTheme } from '../../contexts/themeContext';
 import SelecteurImage from '../../components/SelecteurImage';
+import { convertirFormulaire, validerPersonnage } from '../../utils/validation';
 
 const FORMULAIRE_VIDE = {
   nom: '',
@@ -25,6 +30,8 @@ const FORMULAIRE_VIDE = {
 
 export default function AjoutPersonnage() {
   const { theme } = useTheme();
+  const router = useRouter();
+  const { campagneActive } = useCampagne();
   const [formulaire, setFormulaire] = useState(FORMULAIRE_VIDE);
   const [erreurs, setErreurs] = useState({});
   const [enregistrement, setEnregistrement] = useState(false);
@@ -33,6 +40,29 @@ export default function AjoutPersonnage() {
   const modifier = (champ) => (texte) => setFormulaire((precedent) => ({ ...precedent, [champ]: texte }));
 
   const enregistrer = async () => {
+    const donnees = convertirFormulaire(formulaire);
+    const validation = validerPersonnage(donnees);
+    setErreurs(validation.erreurs);
+    if (!validation.valide) {
+      setErreurGenerale('Corrigez les champs en rouge.');
+      return;
+    }
+    setEnregistrement(true);
+    setErreurGenerale(null);
+    try {
+      const personnage = {
+        ...donnees,
+        id: Crypto.randomUUID(),
+        campagneId: campagneActive.id,
+        statutSync: STATUTS_SYNC.EN_ATTENTE,
+      };
+      ajouterPersonnageTemporaire(personnage);
+      router.replace(`/personnage/${personnage.id}`);
+    } catch {
+      setErreurGenerale('Impossible d’enregistrer le personnage.');
+    } finally {
+      setEnregistrement(false);
+    }
   };
 
   return (
